@@ -1,0 +1,64 @@
+<h1>Welcome, <%= current_user.first_name %>!</h1>
+<a href="/shoes">Go to All Products</a> 
+<form action="/sessions/<%= current_user.id %>" method="post">
+    <input type="hidden" name="authenticity_token" value="<% form_authenticity_token %>">
+    <input type="hidden" name="_method" value="delete">
+    <input type="submit" value="Logout">
+</form>
+<h3>Sell Product</h3>
+<% if flash[:errors] %>
+    <% flash[:errors].each do |e| %>
+        <p><%= e %></p>
+    <% end %>
+<% end %>
+<form action="/shoes" method="post">
+    <input type="hidden" name="authenticity_token" value="<% form_authenticity_token %>">
+    Name: <input type="text" name="shoe[name]"><br>
+    Amount: <input type="number" name="shoe[amount]"><br>
+    <input type="submit" value="Sell">
+</form>
+
+
+
+
+<h3>Your products that are not yet sold: </h3>
+<table>
+    <th><tr><td>Product</td><td>Date Posted</td><td>Amount</td><td>Action</td></tr></th>
+    <% if @myshoes %>
+      <% @myshoes.each do |shoe| %>
+        <% if shoe.purchase == nil %>
+          <tr><td><%= shoe.name %></td><td><%= shoe.created_at %></td><td><%= shoe.amount %></td><td><a href="/shoes/<%= shoe.id %>/remove">Remove</a></td></tr>
+        <% end %>
+      <% end %>
+    <% end %> 
+
+</table>
+
+<h3>Sales</h3>
+<table>
+    <th><tr><td>Product</td><td>Date Bought</td><td>Buyer</td><td>Amount</td></tr></th>
+    <% if @myshoes %>
+      <% @myshoes.each do |shoe| %>
+        <% if shoe.purchase %>
+        <tr><td><%= shoe.name %></td>
+        <td><%= shoe.purchase.created_at %></td>
+        <td><%= shoe.purchase.user.first_name %></td>
+        <td>$<%= shoe.amount %></td></tr>
+        <% end %>
+      <% end %>
+    <% end %>
+</table>
+<h4>Total: $<%= @totalsales %> </h4>
+<h3>Purchases</h3>
+<table>
+    <th><tr><td>Product</td><td>Date Posted</td><td>Seller</td><td>Amount</td></tr></th>
+    <% if @mypurchases %>
+      <% @mypurchases.each do |purchase| %>
+        <tr><td><%= purchase.newshoe.name %></td>
+            <td><%= purchase.created_at %></td>
+            <td><%= purchase.newshoe.user.first_name %></td>
+            <td>$<%= purchase.newshoe.amount %></td></tr>
+      <% end %>
+    <% end %>
+</table>
+<h4>Total: $<%= @totalpurchases %></h4>

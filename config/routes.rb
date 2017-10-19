@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+
+  resources :users
+  resources :sessions
+  resources :shoes
+
+  get '/' => 'users#index'
+  get '/main' => 'users#index'
+  get '/dashboard/:id' => 'users#show'
+  get '/shoes/:id/buy' => 'shoes#buy'
+  get '/shoes/:id/remove' => 'shoes#remove'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
